@@ -40,18 +40,16 @@ module.exports = function(app, db) {
     });
 
     app.post('/notes', (req, res) => {
-        var body = JSON.parse(Object.keys(req.body)[0]);
-        console.log('post request to notes, body: ', body);
-        const note = {
-            text: body.body, 
-            title: body.title
-        };
+        console.log('post request to notes, body: ', req.body);
+        console.log('post request to notes, body parsed : ', Object.keys(req.body));
+        var note = JSON.parse(Object.keys(req.body)[0]);
+        console.log('post request to notes, body: ', note);
         db.collection('notes').insert(note, (err, result) => {
-        if (err) { 
-            res.send({ 'error': 'An error has occurred' }); 
-        } else {
-            res.send(result.ops[0]);
-        }
+            if (err) { 
+                res.send({ 'error': 'An error has occurred' }); 
+            } else {
+                res.send(result.ops[0]);
+            }
         });
   });
 };
