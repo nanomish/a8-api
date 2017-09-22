@@ -39,20 +39,20 @@ module.exports = function(app, db) {
         });    
     });
 
-    app.get('/lists/:user', (req, res) => {
-        const id = req.params.id;
-        const details = {user: { $gt: value1, $lt: value2 } }
-        //{ '_id': '59500edda919c17ec1f78e7f' };
-        db.collection('lists').find(details, (err, item) => {
-            if (err) {
-                res.send({'error':'An error has occurred'});
-            } else {
-                res.send(item);
-            }
-        });    
+    app.get('/lists/', (req, res) => {
+        // using query params
+        const filter = {username: { $eq: req.query.username }}
+
+        db.collection('lists').find(filter).toArray(function(err, items) {
+          if (err) {
+            res.send({'error': 'An error has occurred while querying DB'});
+          } else {
+            console.log('items got: ', items);
+            res.send(items)
+          }          
+        });
     });
 
-    //db.collection.find( { field: { $gt: value1, $lt: value2 } } );
 
     app.post('/lists', (req, res) => {
         console.log('post request to lists, body parsed : ', Object.keys(req.body));
